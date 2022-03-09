@@ -1,0 +1,84 @@
+openapi: 3.0.1
+info:
+  title: Twinu Challenge
+  description: 'This API is meant to let the users upload files based on their username. They would also have the option to download the `metadata`. Moreover, with the metadata, a separate download would also be provided to let the user download their requested file.'
+  contact:
+    email: amritanshu.sikdar@gmail.com
+  version: 1.0.0
+servers:
+- url: https://twinu-challenge.herokuapp.com/files
+tags:
+- name: File
+  description: Operations about uploading and querying those files
+paths:
+  /upload:
+    post:
+      tags:
+      - File
+      summary: Lets the user upload the desired file under their username
+      operationId: uploadFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                username:
+                  type: string
+                  description: Identifier, under which the file will be stored
+                file:
+                  type: object
+                  description: The file must be passed along with the multipart/form-data
+                  format: binary
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: username field missing
+  /metadata:
+    get:
+      tags:
+      - File
+      summary: See the metadata for files uploaded by the user (including download links)
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          required: true
+          description: The exact username with which the original file was uploaded.
+      description: This can only be done by the logged in user
+      operationId: provideMetadata
+      responses:
+        200:
+          description: Successful operation
+        400:
+          description: Invalid request
+        404:
+          description: Requested files not found
+  /download:
+    get:
+      tags:
+      - File
+      summary: Lets the user download the uploaded files under their username
+      description: This can only be done by the logged in user
+      operationId: downloadUserFiles
+      parameters:
+      - name: username
+        in: query
+        description: ID of user whose files need to be downloaded
+        required: true
+        schema:
+          type: string
+      - name: filename
+        in: query
+        description: Name of the requested file
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful operation
+        400:
+          description: Invalid request
+        404:
+          description: User | File not found
