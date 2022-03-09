@@ -68,7 +68,7 @@ export const getAllMetadata = async (req: Request, res: Response) => {
 
     if (files.length === 0)
         return res
-            .status(400)
+            .status(404)
             .json({ error: "No files uploaded from the selected user." });
 
     const uploadedFiles: { [key: string]: any } = [];

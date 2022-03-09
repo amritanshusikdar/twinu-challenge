@@ -8,6 +8,6 @@ import {
 
 export const uploadRouter: Router = express.Router();
 
+uploadRouter.post("/upload", upload.single("file"), uploadFile);
 uploadRouter.get("/metadata", getAllMetadata);
 uploadRouter.get("/download", findAndDownloadFile);
-uploadRouter.post("/upload", upload.single("file"), uploadFile);
